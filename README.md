@@ -1,97 +1,18 @@
-```python
-try:
-    import graphviz as G
-except ImportError as e:
-    print('ModuleNotFoundError: "graphviz" package not available, install it with "pip install graphviz"')
+## Dotnets
 
+A simple and yet flexible python script to build 2D Neural Networks using Graphviz library. This repository also contains a Jupyter Notebook with the script which helps in checking the correctness of the graph quickly without leaving the Jupyter Notebook workspace.
 
-# boolean variables to denote dense or sparse connections
-DENSE = True
-SPARSE = False
-```
+## Main steps involved
+1. Importing the graphviz module
+2. Set the Neural Network architecture defining parameters
+3. Create nodes
+4.  Create edges between the created nodes
+5. Render and
+6. Save/export
 
+## Example graph
 
-```python
-layers = [3, 4, 4, 10, 10]
-connections = [DENSE, DENSE, DENSE, SPARSE] # length = len(layers) - 1
-assert len(connections) == (len(layers) - 1), '"connections" array should be 1 less than the #layers'
-
-penwidth = 15
-font = "Hilda 10"
-```
-
-
-```python
-dot = G.Digraph(comment='Neural Network', 
-                graph_attr={'nodesep':'0.09', 'ranksep':'1', 'bgcolor':'transparent', 'splines':'line', 'rankdir':'LR', 'fontname':font},
-                node_attr={'fixedsize':'true', 'label':"", 'style':'filled', 'color':'none', 'fillcolor':'gray', 'shape':'circle', 'penwidth':str(penwidth)},
-                edge_attr={'color':'black', 'arrowsize':'.5'})
-```
-
-# Create nodes
-
-
-```python
-for i in range(len(layers)):
-    with dot.subgraph(name='cluster_'+str(i)) as c:
-        c.attr(color='transparent') # comment this if background is needed
-        if i == 0:                 # first layer
-            c.attr(label='Input')
-        elif i == len(layers)-1:   # last layer
-            c.attr(label='Output')
-        else:                      # layers in between
-            c.attr(label='Hidden')
-        for a in range(layers[i]):
-            if i == 0 or i == len(layers)-1: # first or last layer
-                c.node('l'+str(i)+str(a), fillcolor='black')
-            else:
-                c.node('l'+str(i)+str(a))
-```
-
-# Create edges
-
-
-```python
-for i in range(len(layers)-1):
-    for a in range(layers[i]):
-        if connections[i] == DENSE:
-            for b in range(layers[i+1]):
-                dot.edge('l'+str(i)+str(a), 'l'+str(i+1)+str(b))
-        elif connections[i] == SPARSE:
-            dot.edge('l'+str(i)+str(a), 'l'+str(i+1)+str(a))
-```
-
-# Render
-
-
-```python
-# to just visualise
-dot
-```
-
-
-
+The following is an example graph of a 5 layered Neural Network with 3, 4, 4, 10, 10 nodes in each layer with **DENSE** connections in the starting layers and **SPARSE** connections between the last two layers.
 
 ![svg](output_8_0.svg)
-
-
-
-# Save/Export
-
-
-```python
-# dot.format = 'png' # or PDF, SVG, etc. 
-```
-
-
-```python
-# to save the file, pdf is default
-dot.render('./network')
-```
-
-
-
-
-    './network.pdf'
-
 
